@@ -1,45 +1,129 @@
 const express = require("express");
+const router = express.Router();
 const Incident = require("../models/Incident");
 const auth = require("../middleware/authMiddleware");
 
-const router = express.Router();
-
+/* ============================= */
+/* CREATE INCIDENT (User Only)  */
+/* ============================= */
 router.post("/", auth, async (req, res) => {
-  const incident = new Incident({
-    title: req.body.title,
-    description: req.body.description,
-    createdBy: req.user.id
-  });
+  try {
+    if (req.user.role !== "user")
+      return res.status(403).json({ message: "Only users can create incidents" });
 
-  await incident.save();
-  res.json(incident);
+    const { title, description, priority } = req.body;
+
+    const incident = new Incident({
+      title,
+      description,
+      priority,
+      createdBy: req.user.id,
+    });
+
+    await incident.save();
+
+    res.status(201).json(incident);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
+/* ===================================== */
+/* GET INCIDENTS (Role-Based Filtering) */
+/* ===================================== */
 router.get("/", auth, async (req, res) => {
-  const incidents = await Incident.find()
-    .populate("createdBy", "name")
-    .populate("assignedTo", "name");
+  try {
+    let incidents;
 
-  res.json(incidents);
+    if (req.user.role === "Admin") {
+      incidents = await Incident.find()
+        .populate("createdBy", "name email")
+        .populate("assignedTo", "name email");
+
+    } else if (req.user.role === "Engineer") {
+      incidents = await Incident.find({
+        assignedTo: req.user.id,
+      }).populate("createdBy", "name email");
+
+    } else {
+      incidents = await Incident.find({
+        createdBy: req.user.id,
+      });
+    }
+
+    res.json(incidents);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
+/* ============================= */
+/* ASSIGN INCIDENT (Admin Only) */
+/* ============================= */
 router.put("/assign/:id", auth, async (req, res) => {
-  const { engineerId } = req.body;
+  try {
+    if (req.user.role !== "Admin")
+      return res.status(403).json({ message: "Access denied" });
 
-  await Incident.findByIdAndUpdate(req.params.id, {
-    assignedTo: engineerId,
-    status: "Assigned"
-  });
+    const { engineerId } = req.body;
 
-  res.json({ message: "Assigned successfully" });
+    const incident = await Incident.findById(req.params.id);
+    if (!incident)
+      return res.status(404).json({ message: "Incident not found" });
+
+    incident.assignedTo = engineerId;
+    incident.status = "Assigned";
+
+    await incident.save();
+
+    res.json({ message: "Incident assigned successfully", incident });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
+/* ============================= */
+/* RESOLVE INCIDENT (Engineer)  */
+/* ============================= */
 router.put("/resolve/:id", auth, async (req, res) => {
-  await Incident.findByIdAndUpdate(req.params.id, {
-    status: "Resolved"
-  });
+  try {
+    if (req.user.role !== "Engineer")
+      return res.status(403).json({ message: "Access denied" });
 
-  res.json({ message: "Resolved successfully" });
+    const incident = await Incident.findById(req.params.id);
+    if (!incident)
+      return res.status(404).json({ message: "Incident not found" });
+
+    if (incident.assignedTo.toString() !== req.user.id)
+      return res.status(403).json({ message: "Not your assigned incident" });
+
+    incident.status = "Resolved";
+    await incident.save();
+
+    res.json({ message: "Incident resolved successfully", incident });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ============================= */
+/* DELETE INCIDENT (Admin Only) */
+/* ============================= */
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin")
+      return res.status(403).json({ message: "Access denied" });
+
+    const incident = await Incident.findById(req.params.id);
+    if (!incident)
+      return res.status(404).json({ message: "Incident not found" });
+
+    await incident.deleteOne();
+
+    res.json({ message: "Incident deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;

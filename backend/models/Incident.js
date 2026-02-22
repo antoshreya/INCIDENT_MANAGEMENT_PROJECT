@@ -1,21 +1,43 @@
 const mongoose = require("mongoose");
 
-const incidentSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  status: {
-    type: String,
-    enum: ["Open", "Assigned", "Resolved"],
-    default: "Open"
+const incidentSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
+
+    priority: {
+      type: String,
+      enum: ["Low", "Medium", "High", "Critical"],
+      default: "Low",
+    },
+
+    status: {
+      type: String,
+      enum: ["Open", "Assigned", "Resolved"],
+      default: "Open",
+    },
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
   },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  assignedTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Incident", incidentSchema);
