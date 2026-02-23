@@ -1,0 +1,239 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BACKGROUND WITH BLUE DOTS */
+.auth-container {
+  height: 100vh;
+  width: 100%;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(59,130,246,0.35) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(59,130,246,0.35) 0%, transparent 45%),
+    radial-gradient(circle at 70% 20%, rgba(147,197,253,0.35) 0%, transparent 40%),
+    radial-gradient(circle at 20% 85%, rgba(147,197,253,0.35) 0%, transparent 40%),
+    linear-gradient(145deg, #edf4ff, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* EXTRA BLUE BALLS */
+.auth-container::before {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: rgba(59,130,246,0.35);
+  border-radius: 50%;
+  top: 6%;
+  left: 10%;
+  z-index: 1;
+}
+
+.auth-container::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(147,197,253,0.35);
+  border-radius: 50%;
+  bottom: -80px;
+  right: -80px;
+  z-index: 1;
+}
+
+/* LEFT GLASS BOX */
+.auth-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.12);
+  max-width: 780px;
+  z-index: 2;
+}
+
+/* IMAGE BIGGER */
+.main-image {
+  width: 650px;
+  max-width: 100%;
+  margin-bottom: 30px;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+  100% { transform: translateY(0); }
+}
+
+/* TEXT */
+.auth-left h1 {
+  font-size: 3.7rem;
+  color: #0d47a1;
+  margin-bottom: 16px;
+}
+
+.auth-left p {
+  font-size: 1.25rem;
+  color: #1e3a8a;
+  max-width: 620px;
+  line-height: 1.7;
+}
+
+/* RIGHT */
+.auth-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+/* LOGIN GLASS BOX */
+.login-card {
+  width: 500px;
+  padding: 55px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.15);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-6px);
+}
+
+/* TITLE */
+.login-card h2 {
+  color: #0d47a1;
+  margin-bottom: 32px;
+  font-size: 2.4rem;
+}
+
+/* INPUT */
+.login-card input {
+  width: 100%;
+  padding: 18px;
+  margin: 16px 0;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.15);
+  outline: none;
+  font-size: 16px;
+  background: rgba(255,255,255,0.75);
+}
+
+.login-card input:focus {
+  border-color: #2563eb;
+  box-shadow: 0px 0px 0px 3px rgba(37,99,235,0.2);
+}
+
+/* BUTTON */
+.login-card button {
+  width: 100%;
+  padding: 18px;
+  margin-top: 24px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-card button:hover {
+  transform: scale(1.04);
+  box-shadow: 0px 12px 28px rgba(37,99,235,0.4);
+}
+
+/* TEXT */
+.login-card p {
+  margin-top: 20px;
+  font-size: 15px;
+  color: #333;
+}
+
+.login-card span {
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+/* ============================= */
+/* FLOATING ANIMATED BUBBLES */
+/* ============================= */
+
+/* Bigger soft bubble */
+.auth-container::before {
+  animation: bubbleMove1 18s ease-in-out infinite alternate;
+}
+
+/* Second bubble */
+.auth-container::after {
+  animation: bubbleMove2 22s ease-in-out infinite alternate;
+}
+
+/* Additional floating bubbles */
+.auth-container .bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(59,130,246,0.25);
+  filter: blur(10px);
+  z-index: 1;
+  animation: bubbleFloat 20s linear infinite;
+}
+
+/* Different sizes & positions */
+.bubble:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  top: 30%;
+  left: 20%;
+  animation-duration: 25s;
+}
+
+.bubble:nth-child(2) {
+  width: 80px;
+  height: 80px;
+  top: 60%;
+  left: 75%;
+  animation-duration: 18s;
+}
+
+.bubble:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  top: 75%;
+  left: 35%;
+  animation-duration: 30s;
+}
+
+/* Animation for existing before bubble */
+@keyframes bubbleMove1 {
+  0% { transform: translate(0px, 0px); }
+  100% { transform: translate(40px, -40px); }
+}
+
+/* Animation for existing after bubble */
+@keyframes bubbleMove2 {
+  0% { transform: translate(0px, 0px); }
+  100% { transform: translate(-50px, 30px); }
+}
+
+/* Floating animation */
+@keyframes bubbleFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+  100% { transform: translateY(0px); }
+}
