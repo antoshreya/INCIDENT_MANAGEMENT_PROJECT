@@ -45,5 +45,13 @@ router.post("/login", async (req, res) => {
     role: user.role
   });
 });
-
+// GET all engineers
+router.get("/engineers", async (req, res) => {
+  try {
+    const engineers = await User.find({ role: "engineer" }).select("-password");
+    res.json(engineers);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 module.exports = router;

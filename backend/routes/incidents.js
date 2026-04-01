@@ -35,20 +35,24 @@ router.get("/", auth, async (req, res) => {
   try {
     let incidents;
 
-    if (req.user.role === "Admin") {
+    if (req.user.role === "admin") {
       incidents = await Incident.find()
         .populate("createdBy", "name email")
         .populate("assignedTo", "name email");
 
-    } else if (req.user.role === "Engineer") {
+    } else if (req.user.role === "engineer") {
       incidents = await Incident.find({
         assignedTo: req.user.id,
-      }).populate("createdBy", "name email");
+      })
+        .populate("createdBy", "name email")
+        .populate("assignedTo", "name email");
 
     } else {
       incidents = await Incident.find({
         createdBy: req.user.id,
-      });
+      })
+        .populate("createdBy", "name email")
+        .populate("assignedTo", "name email");
     }
 
     res.json(incidents);
@@ -62,7 +66,7 @@ router.get("/", auth, async (req, res) => {
 /* ============================= */
 router.put("/assign/:id", auth, async (req, res) => {
   try {
-    if (req.user.role !== "Admin")
+    if (req.user.role !== "admin")
       return res.status(403).json({ message: "Access denied" });
 
     const { engineerId } = req.body;
@@ -87,7 +91,7 @@ router.put("/assign/:id", auth, async (req, res) => {
 /* ============================= */
 router.put("/resolve/:id", auth, async (req, res) => {
   try {
-    if (req.user.role !== "Engineer")
+    if (req.user.role !== "engineer")
       return res.status(403).json({ message: "Access denied" });
 
     const incident = await Incident.findById(req.params.id);
@@ -111,7 +115,7 @@ router.put("/resolve/:id", auth, async (req, res) => {
 /* ============================= */
 router.delete("/:id", auth, async (req, res) => {
   try {
-    if (req.user.role !== "Admin")
+    if (req.user.role !== "admin")
       return res.status(403).json({ message: "Access denied" });
 
     const incident = await Incident.findById(req.params.id);
