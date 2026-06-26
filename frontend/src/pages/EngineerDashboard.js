@@ -14,7 +14,7 @@ export default function EngineerDashboard() {
 
   const fetchIncidents = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/incidents", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -32,7 +32,7 @@ export default function EngineerDashboard() {
   const resolveIncident = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/incidents/resolve/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/incidents/resolve/${id}`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }

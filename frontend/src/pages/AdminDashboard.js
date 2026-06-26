@@ -15,7 +15,7 @@ export default function AdminDashboard() {
 
   const fetchIncidents = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/incidents", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -27,7 +27,7 @@ export default function AdminDashboard() {
 
   const fetchEngineers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/engineers", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/engineers`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
   const assignEngineer = async (incidentId, engineerId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/incidents/assign/${incidentId}`,
+        `${process.env.REACT_APP_API_URL}/api/incidents/assign/${incidentId}`,
         {
           method: "PUT",
           headers: {
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
   const deleteIncident = async (id) => {
     if (!window.confirm("Are you sure you want to delete this incident?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/incidents/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

@@ -14,7 +14,7 @@ export default function IncidentDetails() {
   useEffect(() => {
     const fetchIncident = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/incidents`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

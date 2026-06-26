@@ -17,7 +17,7 @@ export default function UserDashboard() {
 
   const fetchIncidents = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/incidents", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -32,12 +32,13 @@ export default function UserDashboard() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   const addIncident = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/incidents", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/incidents`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
